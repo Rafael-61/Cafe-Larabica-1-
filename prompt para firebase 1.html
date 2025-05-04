@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pedidos - Café La Arábica</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5dc;
+      color: #2e4f2e;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2e4f2e;
+      color: #d4af37;
+      padding: 1rem;
+      text-align: center;
+    }
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 1.5rem;
+      background-color: #d4af37;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #b8952c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Registro de Pedidos - Café La Arábica</h1>
+  </header>
+
+  <form id="pedidoForm">
+    <label for="nombre">Nombre completo:</label>
+    <input type="text" id="nombre" required>
+
+    <label for="correo">Correo electrónico:</label>
+    <input type="email" id="correo" required>
+
+    <label for="telefono">Teléfono:</label>
+    <input type="tel" id="telefono" required>
+
+    <label for="fecha">Fecha del pedido:</label>
+    <input type="date" id="fecha" required>
+
+    <label for="domicilio">Domicilio de entrega:</label>
+    <input type="text" id="domicilio" required>
+
+    <label for="cantidad">Cantidad:</label>
+    <select id="cantidad" required>
+      <option value="250 GR">250 GR</option>
+      <option value="500 GR">500 GR</option>
+      <option value="1 KG">1 KG</option>
+      <option value="2 KG">2 KG</option>
+      <option value="3 KG">3 KG</option>
+      <option value="4 KG">4 KG</option>
+      <option value="5 KG">5 KG</option>
+    </select>
+
+    <label for="tipo">Tipo de café:</label>
+    <select id="tipo" required>
+      <option value="café americano puro molido grueso">Café americano puro molido grueso</option>
+      <option value="café americano puro molido fino">Café americano puro molido fino</option>
+      <option value="café americano con canela molido grueso">Café americano con canela molido grueso</option>
+      <option value="café americano con canela molido fino">Café americano con canela molido fino</option>
+      <option value="café americano en grano">Café americano en grano</option>
+      <option value="café espresso en grano">Café espresso en grano</option>
+    </select>
+
+    <button type="submit">Enviar pedido</button>
+  </form>
+
+  <!-- Firebase Configuración -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhhbaV70GRrwyzJb9Uz_5JhSFEHHA6jQ0",
+      authDomain: "cafe-larabica-1.firebaseapp.com",
+      projectId: "cafe-larabica-1",
+      storageBucket: "cafe-larabica-1.firebasestorage.app",
+      messagingSenderId: "1022399881170",
+      appId: "1:1022399881170:web:afb16b51a7d951af78b20b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('pedidoForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const pedido = {
+        nombre: document.getElementById('nombre').value,
+        correo: document.getElementById('correo').value,
+        telefono: document.getElementById('telefono').value,
+        fecha: document.getElementById('fecha').value,
+        domicilio: document.getElementById('domicilio').value,
+        cantidad: document.getElementById('cantidad').value,
+        tipo: document.getElementById('tipo').value,
+        timestamp: new Date()
+      };
+
+      try {
+        await addDoc(collection(db, 'pedidos'), pedido);
+        alert('Pedido enviado correctamente.');
+        form.reset();
+      } catch (error) {
+        console.error('Error al enviar el pedido:', error);
+        alert('Ocurrió un error al enviar el pedido.');
+      }
+    });
+  </script>
+</body>
+</html>
